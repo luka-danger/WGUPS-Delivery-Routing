@@ -8,11 +8,15 @@ class HashMap:
         for i in range(initial_size):
             self.hashlist.append([])
 
-    def insert(self, key, value):
+    def get_bucket(self, key):
         # Hash Function: Assign each item to a bucket
         bucket = hash(key) % len(self.hashlist)
         # Store item in list
         bucket_list = self.hashlist[bucket]
+        return bucket_list
+
+    def insert(self, key, value):
+        bucket_list = self.get_bucket(key)
 
         # Update key / value pair if key already in bucket_list
         for key_value in bucket_list:
@@ -25,9 +29,7 @@ class HashMap:
         return True
     
     def lookup(self, key):
-        # Hash Function: 
-        bucket = hash(key) % len(self.hashlist)
-        bucket_list = self.hashlist[bucket]
+        bucket_list = self.get_bucket(key)
 
         # Search key and return value pair 
         for key_value in bucket_list:
@@ -35,6 +37,12 @@ class HashMap:
                 return key_value[1]
         return None 
 
+    def remove(self, key):
+        bucket_list = self.get_bucket(key)
 
+        # Remove key / value pair from bucket_list
+        for key_value in bucket_list:
+            if key_value[0] == key:
+                bucket_list.remove(key_value[0], key_value[1])
 
         
