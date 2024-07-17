@@ -8,6 +8,7 @@ class HashMap:
         for i in range(initial_size):
             self.hashlist.append([])
 
+    # Allows for hash function reusability 
     def get_bucket(self, key):
         # Hash Function: Assign each item to a bucket
         bucket = hash(key) % len(self.hashlist)
