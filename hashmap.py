@@ -10,7 +10,7 @@ class HashMap:
 
     def insert(self, key, value):
         # Hash Function: Assign each item to a bucket
-        bucket = hash(value) % len(self.hashtable)
+        bucket = hash(key) % len(self.hashlist)
         # Store item in list
         bucket_list = self.hashlist[bucket]
 
@@ -23,7 +23,18 @@ class HashMap:
         key_value = [key, value]
         bucket_list.append(key_value)
         return True
-                
+    
+    def lookup(self, key):
+        # Hash Function: 
+        bucket = hash(key) % len(self.hashlist)
+        bucket_list = self.hashlist[bucket]
+
+        # Search key and return value pair 
+        for key_value in bucket_list:
+            if key_value[0] == key:
+                return key_value[1]
+        return None 
+
 
 
         
