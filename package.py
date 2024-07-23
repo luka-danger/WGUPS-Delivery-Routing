@@ -10,6 +10,7 @@ class Package:
         self.special_notes = special_notes
         self.status = None
         self.delivery_time = None
+        # If no special notes, pass string indicating no notes ("No Special Notes")
         if special_notes == '':
             self.special_notes = "No Special Notes"
 

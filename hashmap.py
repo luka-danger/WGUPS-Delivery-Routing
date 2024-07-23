@@ -1,7 +1,9 @@
 # Attribution: WGU Webinar 1: "Let's Go Hashing"
 # Link: https://wgu.hosted.panopto.com/Panopto/Pages/Viewer.aspx?id=f08d7871-d57a-496e-a6a1-ac7601308c71
 class HashMap:
-    # Create 10 bucket hash table 
+    # Create 40 + 1 bucket hash table 
+    # Could reduce size to 10 and create chaining to prevent collisions 
+    # For relevatively small amount of data, 41 buckets will suffice
     def __init__(self, initial_size = 41):
         # Create empty buckets
         self.hashlist = []
