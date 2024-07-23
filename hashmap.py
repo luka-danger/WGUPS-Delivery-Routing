@@ -1,7 +1,8 @@
 # Attribution: WGU Webinar 1: "Let's Go Hashing"
+# Link: https://wgu.hosted.panopto.com/Panopto/Pages/Viewer.aspx?id=f08d7871-d57a-496e-a6a1-ac7601308c71
 class HashMap:
     # Create 10 bucket hash table 
-    def __init__(self, initial_size = 10):
+    def __init__(self, initial_size = 41):
         # Create empty buckets
         self.hashlist = []
         # Append empty buckets to a list
@@ -17,15 +18,15 @@ class HashMap:
         return bucket_list
 
     def insert(self, key, value):
-        bucket_list = self.get_bucket(key)
+        bucket_list = self.get_bucket(int(key))
 
         # Update key / value pair if key already in bucket_list
         for key_value in bucket_list:
             if key_value[0] == key:
-                key_value[1] = value 
+                key_value[1] = value
                 return True
         # Append value to bucket_list if key not in bucket_list
-        key_value = [key, value]
+        key_value = [int(key), value]
         bucket_list.append(key_value)
         return True
     
@@ -46,4 +47,6 @@ class HashMap:
             if key_value[0] == key:
                 bucket_list.remove(key_value[0], key_value[1])
 
+    #def print_items(self):
+        # FIX ME
         
