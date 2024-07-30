@@ -7,5 +7,5 @@ class Truck:
         self.mileage = mileage
 
     def __str__(self):
-        return f'{self.capacity}, {self.speed}, {self.currentLocation}, {self.packages},
-        {self.mileage}'
+        return f'{self.capacity}, {self.speed}, {self.currentLocation}, {self.packages},\
+            {self.mileage}'
