@@ -49,6 +49,4 @@ class HashMap:
             if key_value[0] == key:
                 bucket_list.remove(key_value[0], key_value[1])
 
-    #def print_items(self):
-        # FIX ME
         
