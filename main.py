@@ -111,81 +111,83 @@ def distance_between(address1, address2):
     # Prevent code from breaking if index out of range
     except IndexError: 
         return None
-
-def min_distance(truck):
-    # Initialize array to store each distance
-    distance = []
-
-    # location 1 = truck (location will be location 2 when delivering )
-    truck_location = truck.current_location 
-
-    minimum_distance = 2000
-    closest_package = None 
-
-    # Iterate through all address to add distances
-    # for address in address_data: 
-    for package_id in truck.packages: 
-        package = package_hashmap.lookup(package_id)
-        package_address = package.address 
-        distance = distance_between(truck_location, package_address)
-        # print(distance)
-        if distance < minimum_distance:
-            minimum_distance = distance
-            closest_package = package
-    return closest_package
-
-    ''' 
-        if package_address is not None: 
-            next_distance = distance_between(truck_location, package_address)
-            if next_distance is not None: 
-                distance.append(next_distance)
-    # Find shortest distance and assign as next location 
-    closest_location = min(distance)
-    # Find item by index
-    closest_address_index = distance.index(closest_location)
-    get_address = address_data[closest_address_index]
-
-    return closest_address_index, get_address, closest_location
-    '''
-
-
+    
 
 # Manually Load Trucks
 # Instantiate Truck(id, capacity, speed, current location (WGU Hub), package array, mileage, departure time)
 # Truck 1 leaves at 8:00am, the earliest it is allowed to leave the hub
-truck_1 = Truck(1, 16, 18, '4001 South 700 East', [1, 4, 11, 12, 13, 14, 15, 16, 17, 19, 20, 21, 26, 29, 31, 40], 0\
-                , datetime.timedelta(hours=8, minutes=0, seconds=0))
+truck_1 = Truck(1, 16, 18, '4001 South 700 East', [1, 11, 12, 13, 14, 15, 16, 17, 19, 20, 21, 29, 30, 31, 37, 40], 0\
+                , datetime.timedelta(hours=8, minutes=0))
 # Truck 2 leaves at 9:10am, after delayed packages have arrived
-truck_2 = Truck(2, 16, 18, '4001 South 700 East', [3, 5, 8, 18, 22, 30, 34, 36, 37, 38], 0\
-                , datetime.timedelta(hours=9, minutes=10, seconds=0))
+truck_2 = Truck(2, 16, 18, '4001 South 700 East', [3, 4, 5, 8, 18, 22, 25, 26, 34, 36, 38], 0\
+                , datetime.timedelta(hours=9, minutes=10))
 # Truck 3 leaves at 10:25am, after the correct destination for package 9 is known 
-truck_3 = Truck(3, 16, 18, '4001 South 700 East', [2, 6, 7, 9, 10, 23, 24, 25, 27, 28, 32, 33, 35, 39], 0\
-                , datetime.timedelta(hours=10, minutes=25, seconds=0))
+truck_3 = Truck(3, 16, 18, '4001 South 700 East', [2, 6, 7, 9, 10, 23, 24, 27, 28, 32, 33, 35, 39], 0\
+                , datetime.timedelta(hours=10, minutes=25))
 
 
 # Atribution: WGU C950 Instruction Doc
 ## FIX ME
-'''
-def nearest_neighbor(truck):
-    while len(truck.packages) > 0:
-        min_distance = 2000
-        closest_package = None
 
-        for packageID in truck.packages:
-            package = HashMap.lookup(packageID)
-            truck_location = truck.location 
-            package_address = package.address
+def deliver_package(truck):
+    truck.current_time = truck.departure 
+    distance = []
+
+    while len(truck.packages) > 0:
+        min_distance = float('inf')
+        closest_package = None 
+
+        for package_id in truck.packages: 
+            package = package_hashmap.lookup(package_id)
+            package_address = package.address 
+            truck_location = truck.current_location 
             distance = distance_between(truck_location, package_address)
 
+        
             if distance < min_distance:
                 min_distance = distance
                 closest_package = package
+                closest_package_id = package_id
+                
 
         truck.mileage += min_distance
 
-        truck.current_time += (min_distance / Truck.speed)
+        travel_time = (min_distance / truck.speed)
+        travel_time_converted = datetime.timedelta(hours=travel_time)
 
-        closest_package.delivery_time = truck.currentTime
+        truck.current_time += travel_time_converted
+        closest_package.delivery_time = truck.current_time
+        print(f'Package {closest_package.id} delivered at {closest_package.delivery_time}')
 
-        closest_package.delivery_status = 'DELIVERED'
+        closest_package.status = 'DELIVERED'
+        if closest_package.id == '14':
+            ## ALSO DELIVER AND REMOVE packages 13, 15, 19, and 20 when 14 is delivered
+            additional_packages = [13, 15, 19, 20]
+            for package_id in additional_packages:
+                if package_id in truck.packages:
+                    package = package_hashmap.lookup(package_id)
+                    package.delivery_time = truck.current_time
+                    package.status = 'DELIVERED'
+                    truck.packages.remove(package_id)
+                    print(f'Package {package_id} also delivered at {package.delivery_time} with Package 14')
+        
+        truck.current_location = closest_package.address
+        if closest_package_id in truck.packages:
+            truck.packages.remove(closest_package_id)
+        else:
+            print(f"Package ID {closest_package_id} not found in truck.packages")
+
+        
+deliver_package(truck_1)
+deliver_package(truck_2)
+deliver_package(truck_3)
+
+total_mileage = truck_1.mileage + truck_2.mileage + truck_3.mileage
+print(total_mileage)
+# print(truck_1.packages[2])
+'''
+truck_1.packages.append(20000)
+print(truck_1.packages)
+truck_1.packages.remove(20000)
+print(truck_1.packages)
 '''
