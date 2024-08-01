@@ -1,6 +1,6 @@
-from hashmap import HashMap
-from package import Package
-from truck import Truck
+from hashmap import *
+from package import *
+from truck import *
 import csv 
 import datetime
 
@@ -45,7 +45,6 @@ def load_package_data(csv_file, hash_map):
             # Use HashMap insert 
             # {Key: package_id, Value: Package_Data)
             hash_map.insert(package_id, package_data)
-        print(hash_map)
 
 # Instantiate HashMap
 package_hashmap = HashMap()
@@ -81,7 +80,7 @@ def load_address_data():
     # Iterate through each row of address
     for address in ReadAddress:
         # Append to address_data array
-        address_data.append(address)
+        address_data.append(address[2])
 
 
 # Pass Address CSV File to load_address_data function
@@ -94,15 +93,17 @@ def lookup_address(index):
         return address_data[index]
     else:
         return 'Index out of range'
-
-print(lookup_address(26))
+    
 
 def distance_between(address1, address2):
     # Look at the distance between 2 addresses using indexes 
     try:
-        address_distance = distance_data[address1][address2]
+        index_1 = address_data.index(address1)
+        index_2 = address_data.index(address2)
+        address_distance = distance_data[index_1][index_2]
+        # FIX ME: Move to load_distance_data 
         if address_distance == '':
-            address_distance = distance_data[address2][address1]
+            address_distance = distance_data[index_2][index_1]
         return float(address_distance)
     # Prevent code from breaking if address not found
     except ValueError:
@@ -112,8 +113,42 @@ def distance_between(address1, address2):
         return None
 
 def min_distance(truck):
-    # FIX ME 
-    return None 
+    # Initialize array to store each distance
+    distance = []
+
+    # location 1 = truck (location will be location 2 when delivering )
+    truck_location = truck.current_location 
+
+    minimum_distance = 2000
+    closest_package = None 
+
+    # Iterate through all address to add distances
+    # for address in address_data: 
+    for package_id in truck.packages: 
+        package = package_hashmap.lookup(package_id)
+        package_address = package.address 
+        distance = distance_between(truck_location, package_address)
+        # print(distance)
+        if distance < minimum_distance:
+            minimum_distance = distance
+            closest_package = package
+    return closest_package
+
+    ''' 
+        if package_address is not None: 
+            next_distance = distance_between(truck_location, package_address)
+            if next_distance is not None: 
+                distance.append(next_distance)
+    # Find shortest distance and assign as next location 
+    closest_location = min(distance)
+    # Find item by index
+    closest_address_index = distance.index(closest_location)
+    get_address = address_data[closest_address_index]
+
+    return closest_address_index, get_address, closest_location
+    '''
+
+
 
 # Manually Load Trucks
 # Instantiate Truck(id, capacity, speed, current location (WGU Hub), package array, mileage, departure time)
@@ -127,7 +162,10 @@ truck_2 = Truck(2, 16, 18, '4001 South 700 East', [3, 5, 8, 18, 22, 30, 34, 36, 
 truck_3 = Truck(3, 16, 18, '4001 South 700 East', [2, 6, 7, 9, 10, 23, 24, 25, 27, 28, 32, 33, 35, 39], 0\
                 , datetime.timedelta(hours=10, minutes=25, seconds=0))
 
+
 # Atribution: WGU C950 Instruction Doc
+## FIX ME
+'''
 def nearest_neighbor(truck):
     while len(truck.packages) > 0:
         min_distance = 2000
@@ -150,4 +188,4 @@ def nearest_neighbor(truck):
         closest_package.delivery_time = truck.currentTime
 
         closest_package.delivery_status = 'DELIVERED'
-
+'''
