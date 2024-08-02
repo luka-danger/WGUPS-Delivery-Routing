@@ -119,10 +119,10 @@ def distance_between(address1, address2):
 truck_1 = Truck(1, 16, 18, '4001 South 700 East', [1, 11, 12, 13, 14, 15, 16, 17, 19, 20, 21, 29, 30, 31, 37, 40], 0\
                 , datetime.timedelta(hours=8, minutes=0))
 # Truck 2 leaves at 9:10am, after delayed packages have arrived
-truck_2 = Truck(2, 16, 18, '4001 South 700 East', [3, 4, 5, 8, 18, 22, 25, 26, 34, 36, 38], 0\
+truck_2 = Truck(2, 16, 18, '4001 South 700 East', [3, 4, 6, 8, 18, 22, 25, 26, 34, 36, 38], 0\
                 , datetime.timedelta(hours=9, minutes=10))
 # Truck 3 leaves at 10:25am, after the correct destination for package 9 is known 
-truck_3 = Truck(3, 16, 18, '4001 South 700 East', [2, 6, 7, 9, 10, 23, 24, 27, 28, 32, 33, 35, 39], 0\
+truck_3 = Truck(3, 16, 18, '4001 South 700 East', [2, 5, 7, 9, 10, 23, 24, 27, 28, 32, 33, 35, 39], 0\
                 , datetime.timedelta(hours=10, minutes=25))
 
 
@@ -142,9 +142,18 @@ def deliver_package(truck):
             package_address = package.address 
             truck_location = truck.current_location 
             distance = distance_between(truck_location, package_address)
+            
+            if package_id == 9: 
+                package = package_hashmap.lookup(9)
+                package.address = '410 S State St'
+                package.zip_code = '84111'
 
-        
-            if distance < min_distance:
+            if package_id == 6:
+                package = package_hashmap.lookup(6)
+                closest_package = package
+                closest_package_id = package_id
+
+            elif distance < min_distance:
                 min_distance = distance
                 closest_package = package
                 closest_package_id = package_id
