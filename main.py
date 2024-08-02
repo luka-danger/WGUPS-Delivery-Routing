@@ -200,9 +200,9 @@ def main_menu():
     print('''
 ====================================
           
-1. This is the first choice
-2. This is the second choice
-3. This is the third choice
+1. Print All Packages’ Information when they are Delivered along with Total Mileage of all Trucks.
+2. Print All Information (including Status) of a given Package at a Given Time.
+3. Print All Information (including Statuses) of All the Packages at a Given Time.
 4. Exit Program
 
 ====================================
