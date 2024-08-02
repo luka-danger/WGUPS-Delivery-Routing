@@ -1,13 +1,14 @@
+from logo import *
 from hashmap import *
 from package import *
 from truck import *
 import csv 
 import datetime
 
+print(logo)
+
 # Read Address CSV file
 # Attribution: https://docs.python.org/3/library/csv.html
-
-
 '''
 Load Package Data Function 
 
@@ -192,11 +193,20 @@ deliver_package(truck_2)
 deliver_package(truck_3)
 
 total_mileage = truck_1.mileage + truck_2.mileage + truck_3.mileage
-print(total_mileage)
-# print(truck_1.packages[2])
-'''
-truck_1.packages.append(20000)
-print(truck_1.packages)
-truck_1.packages.remove(20000)
-print(truck_1.packages)
-'''
+print('\n')
+print(f'All packages delivered in {total_mileage} miles.')
+
+def main_menu():
+    print('''
+====================================
+          
+1. This is the first choice
+2. This is the second choice
+3. This is the third choice
+4. Exit Program
+
+====================================
+          '''
+    )
+
+main_menu()
