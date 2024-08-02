@@ -39,7 +39,7 @@ class HashMap:
         for key_value in bucket_list:
             if key_value[0] == key:
                 return key_value[1]
-        return None 
+        return 'Package ID not found.' 
 
     def remove(self, key):
         bucket_list = self.get_bucket(key)

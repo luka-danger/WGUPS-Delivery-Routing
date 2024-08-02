@@ -2,6 +2,7 @@ from logo import *
 from hashmap import *
 from package import *
 from truck import *
+from menu import *
 import csv 
 import datetime
 
@@ -38,10 +39,12 @@ def load_package_data(csv_file, hash_map):
             deadline = row[5]
             weight = row[6]
             special_notes = row[7]
+            status = row[8] if len(row) > 8 else 'No Status'
+            delivery_time = row[9] if len(row) > 9 else 'NOT DELIVERED'
 
             # HashMap instance 
             # Value for HashMap
-            package_data = Package(package_id, address, city, state, zip_code, deadline, weight, special_notes)
+            package_data = Package(package_id, address, city, state, zip_code, deadline, weight, special_notes, status, delivery_time)
             
             # Use HashMap insert 
             # {Key: package_id, Value: Package_Data)
@@ -133,6 +136,7 @@ truck_3 = Truck(3, 16, 18, '4001 South 700 East', [2, 5, 7, 9, 10, 23, 24, 27, 2
 def deliver_package(truck):
     truck.current_time = truck.departure 
     distance = []
+    delivery_info = []
 
     while len(truck.packages) > 0:
         min_distance = float('inf')
@@ -167,9 +171,10 @@ def deliver_package(truck):
 
         truck.current_time += travel_time_converted
         closest_package.delivery_time = truck.current_time
+        closest_package.status = 'DELIVERED'
+        delivery_info.append((closest_package.id, closest_package.delivery_time))
         print(f'Package {closest_package.id} delivered at {closest_package.delivery_time}')
 
-        closest_package.status = 'DELIVERED'
         if closest_package.id == '14':
             ## ALSO DELIVER AND REMOVE packages 13, 15, 19, and 20 when 14 is delivered
             additional_packages = [13, 15, 19, 20]
@@ -187,26 +192,35 @@ def deliver_package(truck):
         else:
             print(f"Package ID {closest_package_id} not found in truck.packages")
 
+    return delivery_info
         
-deliver_package(truck_1)
-deliver_package(truck_2)
-deliver_package(truck_3)
-
-total_mileage = truck_1.mileage + truck_2.mileage + truck_3.mileage
-print('\n')
-print(f'All packages delivered in {total_mileage} miles.')
+def print_all_info():
+    deliver_package(truck_1)
+    deliver_package(truck_2)
+    deliver_package(truck_3)
+ 
 
 def main_menu():
-    print('''
-====================================
-          
-1. Print All Packages’ Information when they are Delivered along with Total Mileage of all Trucks.
-2. Print All Information (including Status) of a given Package at a Given Time.
-3. Print All Information (including Statuses) of All the Packages at a Given Time.
-4. Exit Program
 
-====================================
-          '''
-    )
+    print(menu)
+    user_input = int(input("Choose an option: 1, 2, 3, or 4?: \n"))
+    if user_input == 1:
+        print_all_info()
+
+        total_mileage = truck_1.mileage + truck_2.mileage + truck_3.mileage
+        print('\n')
+        print(f'All packages delivered in {total_mileage} miles.')
+        print('\n')
+
+    if user_input == 2:
+        choose_package_id = int(input("Enter a Package ID to lookup: \n"))
+        selected_package_id = package_hashmap.lookup(choose_package_id)
+        print(selected_package_id)
+
+        
+        
+
+        # choose_time_hour = int("Enter an hour: \n")
+        # choose_time_minute = int("Enter a minute: \n")
 
 main_menu()
