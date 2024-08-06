@@ -3,10 +3,10 @@ from hashmap import *
 from package import *
 from truck import *
 from menu import *
+from datetime import *
 import csv 
 import datetime
 
-print(logo)
 
 # Read Address CSV file
 # Attribution: https://docs.python.org/3/library/csv.html
@@ -152,6 +152,7 @@ def deliver_package(truck):
                 package = package_hashmap.lookup(9)
                 package.address = '410 S State St'
                 package.zip_code = '84111'
+                package.special_notes = 'Address Changed from 300 State St to 410 S State St'
 
             if package_id == 6:
                 package = package_hashmap.lookup(6)
@@ -175,7 +176,7 @@ def deliver_package(truck):
         closest_package.delivery_time = truck.current_time
         closest_package.status = 'DELIVERED'
         ## FIX ME 
-        print(f'Package {closest_package.id} delivered at {closest_package.delivery_time}')
+        # print(f'Package {closest_package.id} delivered at {closest_package.delivery_time}')
 
         if closest_package.id == '14':
             ## ALSO DELIVER AND REMOVE packages 13, 15, 19, and 20 when 14 is delivered
@@ -188,7 +189,7 @@ def deliver_package(truck):
                     truck.packages.remove(package_id)
                     deliveries.append(package)
                     ## FIX ME 
-                    print(f'Package {package_id} delivered at {package.delivery_time}')
+                    # print(f'Package {package_id} delivered at {package.delivery_time}')
             
         truck.current_location = closest_package.address
         if closest_package_id in truck.packages:
@@ -201,53 +202,82 @@ def combine():
     all_deliveries = []
     delivery_1 = deliver_package(truck_1)
     for package in delivery_1:
-        all_deliveries.append(package)
+        if package not in all_deliveries:
+            all_deliveries.append(package)
 
     delivery_2 = deliver_package(truck_2)
     for package in delivery_2:
-        all_deliveries.append(package)
+        if package not in all_deliveries:
+            all_deliveries.append(package)
 
     delivery_3 = deliver_package(truck_3)
     for package in delivery_3:
-        all_deliveries.append(package)
+        if package not in all_deliveries:
+            all_deliveries.append(package)
+    
+    all_deliveries.sort(key=lambda pkg: pkg.delivery_time)
 
     for package in all_deliveries:
-        print(package)
+        print(f'Package {package.id} delivered at {package.delivery_time}')
 
-combine()
+    return all_deliveries
 
-
-def print_all_info():
+def all_deliveries():
     deliver_package(truck_1)
     deliver_package(truck_2)
     deliver_package(truck_3)
 
+def total_mileage():
+    all_deliveries()
+
+    total_mileage = truck_1.mileage + truck_2.mileage + truck_3.mileage
+    print('\n')
+    print(f'All packages delivered in {total_mileage} miles.')
 
 def main_menu():
+    print(logo)
 
-    print(menu)
-    user_input = int(input("Choose an option: 1, 2, 3, or 4?: \n"))
-    if user_input == 1:
-        print_all_info()
+    while True:
+        print(menu)
+        user_input = int(input("Choose an option: 1, 2, 3, 4, or 5?: \n"))
 
-        total_mileage = truck_1.mileage + truck_2.mileage + truck_3.mileage
-        print('\n')
-        print(f'All packages delivered in {total_mileage} miles.')
-        print('\n')
+        if user_input == 1:
+            total_mileage()
 
-    if user_input == 2:
-        choose_package_id = int(input("Enter a Package ID to lookup: \n"))
-        selected_package_id = package_hashmap.lookup(choose_package_id)
-        print(selected_package_id)
+        elif user_input == 2:
+            combine()
+            total_mileage()
 
-    if user_input == 3: 
-        test()
+        elif user_input == 3:
+            all_deliveries()
+            choose_package_id = int(input("Enter a Package ID to lookup: \n"))
+
+            # input_time = input("Enter a time in hh:mm:ss format:\n")
+            # converted_time = datetime.strptime(input_time, '%H:%M:%S').time()
+
+            selected_package_id = package_hashmap.lookup(choose_package_id)
+
+            print(f'Package {selected_package_id} was delivered at {selected_package_id.delivery_time}')
+
+            # if converted_time >= selected_package_id.delivery_time:
+                # print(f'Package {selected_package_id} was delivered at {selected_package_id.delivery_time}')
+            # else:
+                # print(f'Package {selected_package_id} has not been delivered yet.')
+
+        elif user_input == 4:
+            all_deliveries()
+            choose_time = int(input("Enter a time in hh:mm:ss format:\n"))
+            selected_package_id = package_hashmap.lookup(choose_package_id)
+            print(selected_package_id)
+
+        elif user_input == 5: 
+            print("Exiting Program\n")
+            break
+        
+        else: 
+            print(f'{user_input} is an invalid input.')
 
         
-        
-
-        # choose_time_hour = int("Enter an hour: \n")
-        # choose_time_minute = int("Enter a minute: \n")
-
 main_menu()
+
 
