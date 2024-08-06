@@ -228,7 +228,7 @@ def total_mileage():
 
 def main_menu():
     print(logo)
-
+    all_deliveries = combine()
     while True:
         print(menu)
         user_input = int(input("Choose an option: 1, 2, 3, 4, or 5?: \n"))
@@ -237,7 +237,6 @@ def main_menu():
             total_mileage()
 
         elif user_input == 2:
-            all_deliveries = combine()
             for package in all_deliveries:
                 print(f'Package {package.id} delivered at {package.delivery_time}\n')
             total_mileage()
@@ -245,7 +244,6 @@ def main_menu():
         elif user_input == 3:
             from datetime import datetime
 
-            all_deliveries = combine()
             choose_package_id = int(input("Enter a Package ID to lookup: \n"))
 
             def timedelta_to_time(td):
@@ -254,12 +252,10 @@ def main_menu():
                 minutes, seconds = divmod(remainder, 60)
                 return datetime.time(datetime(1900, 1, 1, hours, minutes, seconds))
 
-            # Input time in hh:mm:ss format
             try: 
                 input_time = input("Enter current time in hh:mm:ss format:\n")
                 current_time = datetime.strptime(input_time, "%H:%M:%S").time()
 
-                # Simulate fetching a package and its delivery time
                 selected_package = package_hashmap.lookup(choose_package_id)
 
                 # Convert the delivery time from timedelta to time
@@ -275,7 +271,6 @@ def main_menu():
 
         elif user_input == 4:
             from datetime import datetime
-            all_deliveries = combine()
 
             def timedelta_to_time(td):
                 total_seconds = int(td.total_seconds())
@@ -283,7 +278,6 @@ def main_menu():
                 minutes, seconds = divmod(remainder, 60)
                 return datetime.time(datetime(1900, 1, 1, hours, minutes, seconds))
 
-            # Input time in hh:mm:ss format
             try: 
                 input_time = input("Enter current time in hh:mm:ss format:\n")
                 current_time = datetime.strptime(input_time, "%H:%M:%S").time()
