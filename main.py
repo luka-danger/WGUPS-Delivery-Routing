@@ -136,7 +136,7 @@ truck_3 = Truck(3, 16, 18, '4001 South 700 East', [2, 5, 7, 9, 10, 23, 24, 27, 2
 def deliver_package(truck):
     truck.current_time = truck.departure 
     distance = []
-    delivery_info = []
+    deliveries = []
 
     while len(truck.packages) > 0:
         min_distance = float('inf')
@@ -157,11 +157,13 @@ def deliver_package(truck):
                 package = package_hashmap.lookup(6)
                 closest_package = package
                 closest_package_id = package_id
+                deliveries.append(closest_package)
 
             elif distance < min_distance:
                 min_distance = distance
                 closest_package = package
                 closest_package_id = package_id
+                deliveries.append(closest_package)
                 
 
         truck.mileage += min_distance
@@ -172,7 +174,7 @@ def deliver_package(truck):
         truck.current_time += travel_time_converted
         closest_package.delivery_time = truck.current_time
         closest_package.status = 'DELIVERED'
-        delivery_info.append((closest_package.id, closest_package.delivery_time))
+        ## FIX ME 
         print(f'Package {closest_package.id} delivered at {closest_package.delivery_time}')
 
         if closest_package.id == '14':
@@ -184,21 +186,42 @@ def deliver_package(truck):
                     package.delivery_time = truck.current_time
                     package.status = 'DELIVERED'
                     truck.packages.remove(package_id)
-                    print(f'Package {package_id} also delivered at {package.delivery_time} with Package 14')
-        
+                    deliveries.append(package)
+                    ## FIX ME 
+                    print(f'Package {package_id} delivered at {package.delivery_time}')
+            
         truck.current_location = closest_package.address
         if closest_package_id in truck.packages:
             truck.packages.remove(closest_package_id)
         else:
-            print(f"Package ID {closest_package_id} not found in truck.packages")
+            print(f"Package ID {closest_package_id} not found in truck.packages")    
+    return deliveries 
 
-    return delivery_info
-        
+def combine():
+    all_deliveries = []
+    delivery_1 = deliver_package(truck_1)
+    for package in delivery_1:
+        all_deliveries.append(package)
+
+    delivery_2 = deliver_package(truck_2)
+    for package in delivery_2:
+        all_deliveries.append(package)
+
+    delivery_3 = deliver_package(truck_3)
+    for package in delivery_3:
+        all_deliveries.append(package)
+
+    for package in all_deliveries:
+        print(package)
+
+combine()
+
+
 def print_all_info():
     deliver_package(truck_1)
     deliver_package(truck_2)
     deliver_package(truck_3)
- 
+
 
 def main_menu():
 
@@ -217,6 +240,9 @@ def main_menu():
         selected_package_id = package_hashmap.lookup(choose_package_id)
         print(selected_package_id)
 
+    if user_input == 3: 
+        test()
+
         
         
 
@@ -224,3 +250,4 @@ def main_menu():
         # choose_time_minute = int("Enter a minute: \n")
 
 main_menu()
+

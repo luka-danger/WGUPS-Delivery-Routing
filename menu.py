@@ -1,9 +1,11 @@
 menu = ('''
 =======================================================
           
-1. View All Delivery Information and Total Mileage
-2. View All Information of a Single Package at a Given Time
-3. View All Information of All Packages at a Given Time
+1. View Total Mileage
+2. View Deliveries in Order by Delivery Time
+3. View Deliveries in Order by Package ID
+2. View Single Package Info at a Given Time
+3. View All Package Info at a Given Time
 4. Exit Program
 
 ========================================================
