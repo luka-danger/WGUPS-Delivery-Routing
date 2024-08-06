@@ -217,18 +217,10 @@ def combine():
     
     all_deliveries.sort(key=lambda pkg: pkg.delivery_time)
 
-    for package in all_deliveries:
-        print(f'Package {package.id} delivered at {package.delivery_time}')
-
     return all_deliveries
 
-def all_deliveries():
-    deliver_package(truck_1)
-    deliver_package(truck_2)
-    deliver_package(truck_3)
-
 def total_mileage():
-    all_deliveries()
+    combine()
 
     total_mileage = truck_1.mileage + truck_2.mileage + truck_3.mileage
     print('\n')
@@ -245,37 +237,77 @@ def main_menu():
             total_mileage()
 
         elif user_input == 2:
-            combine()
+            all_deliveries = combine()
+            for package in all_deliveries:
+                print(f'Package {package.id} delivered at {package.delivery_time}\n')
             total_mileage()
 
         elif user_input == 3:
-            all_deliveries()
+            from datetime import datetime
+
+            all_deliveries = combine()
             choose_package_id = int(input("Enter a Package ID to lookup: \n"))
 
-            # input_time = input("Enter a time in hh:mm:ss format:\n")
-            # converted_time = datetime.strptime(input_time, '%H:%M:%S').time()
+            def timedelta_to_time(td):
+                total_seconds = int(td.total_seconds())
+                hours, remainder = divmod(total_seconds, 3600)
+                minutes, seconds = divmod(remainder, 60)
+                return datetime.time(datetime(1900, 1, 1, hours, minutes, seconds))
 
-            selected_package_id = package_hashmap.lookup(choose_package_id)
+            # Input time in hh:mm:ss format
+            try: 
+                input_time = input("Enter current time in hh:mm:ss format:\n")
+                current_time = datetime.strptime(input_time, "%H:%M:%S").time()
 
-            print(f'Package {selected_package_id} was delivered at {selected_package_id.delivery_time}')
+                # Simulate fetching a package and its delivery time
+                selected_package = package_hashmap.lookup(choose_package_id)
 
-            # if converted_time >= selected_package_id.delivery_time:
-                # print(f'Package {selected_package_id} was delivered at {selected_package_id.delivery_time}')
-            # else:
-                # print(f'Package {selected_package_id} has not been delivered yet.')
+                # Convert the delivery time from timedelta to time
+                delivery_time_as_time = timedelta_to_time(selected_package.delivery_time)
+
+                if current_time >= delivery_time_as_time:
+                    print(f'Package {selected_package.id} was delivered at {delivery_time_as_time}.\n')
+                else:
+                    print(f'Package {selected_package.id} has not been delivered yet. The delivery deadline is {selected_package.deadline}\n')
+            
+            except:
+                print('Please enter valid time format (hh:mm:ss)')
 
         elif user_input == 4:
-            all_deliveries()
-            choose_time = int(input("Enter a time in hh:mm:ss format:\n"))
-            selected_package_id = package_hashmap.lookup(choose_package_id)
-            print(selected_package_id)
+            from datetime import datetime
+            all_deliveries = combine()
+
+            def timedelta_to_time(td):
+                total_seconds = int(td.total_seconds())
+                hours, remainder = divmod(total_seconds, 3600)
+                minutes, seconds = divmod(remainder, 60)
+                return datetime.time(datetime(1900, 1, 1, hours, minutes, seconds))
+
+            # Input time in hh:mm:ss format
+            try: 
+                input_time = input("Enter current time in hh:mm:ss format:\n")
+                current_time = datetime.strptime(input_time, "%H:%M:%S").time()
+
+                for package in all_deliveries:
+                    # Convert the delivery time from timedelta to time
+                    delivery_time_as_time = timedelta_to_time(package.delivery_time)
+                    if current_time >= delivery_time_as_time:
+                        print(f'Package {package.id} was delivered at {delivery_time_as_time}.')
+                    else:
+                        print(f'Package {package.id} has not been delivered yet.')
+
+            except:
+                print('Please enter valid time format (hh:mm:ss)')
+            
 
         elif user_input == 5: 
+            print('\n')
             print("Exiting Program\n")
             break
         
         else: 
-            print(f'{user_input} is an invalid input.')
+            print('\n')
+            print(f'{user_input} is an invalid input.\n')
 
         
 main_menu()
