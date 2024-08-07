@@ -39,12 +39,14 @@ def load_package_data(csv_file, hash_map):
             deadline = row[5]
             weight = row[6]
             special_notes = row[7]
-            status = row[8] if len(row) > 8 else 'No Status'
-            delivery_time = row[9] if len(row) > 9 else 'NOT DELIVERED'
-
+            departure = row[8] if len(row) > 8 else datetime.timedelta(hours=8, minutes=0)
+            status = row[9] if len(row) > 9 else 'At Hub'
+            delivery_time = row[10] if len(row) > 10 else 'NOT DELIVERED'
+            truck_num = row[11] if len(row) > 11 else 0
+        
             # HashMap instance 
             # Value for HashMap
-            package_data = Package(package_id, address, city, state, zip_code, deadline, weight, special_notes, status, delivery_time)
+            package_data = Package(package_id, address, city, state, zip_code, deadline, weight, special_notes, departure, status, delivery_time, truck_num)
             
             # Use HashMap insert 
             # {Key: package_id, Value: Package_Data)
@@ -97,15 +99,25 @@ def lookup_address(index):
         return address_data[index]
     else:
         return 'Index out of range'
-    
 
+'''
+Load Package Data Function 
+
+Params: 
+address1 (current address), address2 (next address)
+
+Calculates the distance between two address points. 
+If no distance exists, find address from next address to current address.
+
+Try-Except Prevents code from breaking when address is not found or out of range
+'''
 def distance_between(address1, address2):
-    # Look at the distance between 2 addresses using indexes 
     try:
+        # Calculate distance between two addresses using index from address data array
         index_1 = address_data.index(address1)
         index_2 = address_data.index(address2)
         address_distance = distance_data[index_1][index_2]
-        # FIX ME: Move to load_distance_data 
+        # If no distance listed, calculate address from next location to current location 
         if address_distance == '':
             address_distance = distance_data[index_2][index_1]
         return float(address_distance)
@@ -129,13 +141,36 @@ truck_2 = Truck(2, 16, 18, '4001 South 700 East', [3, 4, 6, 8, 18, 22, 25, 26, 3
 truck_3 = Truck(3, 16, 18, '4001 South 700 East', [2, 5, 7, 9, 10, 23, 24, 27, 28, 32, 33, 35, 39], 0\
                 , datetime.timedelta(hours=10, minutes=25))
 
+def assign_truck_num(truck):
+    for package in truck.packages:
+        package = package_hashmap.lookup(package)
+        package.truck_num = truck.truck_id 
+        package.departure = truck.departure 
 
-# Atribution: WGU C950 Instruction Doc
-## FIX ME
+assign_truck_num(truck_1)
+assign_truck_num(truck_2)
+assign_truck_num(truck_3)
 
+
+'''
+Nearest Neighbor Algorithm 
+
+Params: 
+Truck (1, 2, or 3)
+
+Starting: Set the truck location to the hub. Instantiate an empty array for deliveries. 
+(Used for a separate function)
+
+Algorithm: Run while there are packages on truck. Iterate through each package on the truck, 
+using the hashmap lookup to find the package by ID. Use the distance between function to 
+calculate the distance from the truck current location (starting at hub) and the 
+
+Try-Except Prevents code from breaking when address is not found or out of range
+
+Attribution: WGU Resources (Example Nearest Neighbor Algorithm)
+'''
 def deliver_package(truck):
     truck.current_time = truck.departure 
-    distance = []
     deliveries = []
 
     while len(truck.packages) > 0:
@@ -174,9 +209,6 @@ def deliver_package(truck):
 
         truck.current_time += travel_time_converted
         closest_package.delivery_time = truck.current_time
-        closest_package.status = 'DELIVERED'
-        ## FIX ME 
-        # print(f'Package {closest_package.id} delivered at {closest_package.delivery_time}')
 
         if closest_package.id == '14':
             ## ALSO DELIVER AND REMOVE packages 13, 15, 19, and 20 when 14 is delivered
@@ -185,11 +217,8 @@ def deliver_package(truck):
                 if package_id in truck.packages:
                     package = package_hashmap.lookup(package_id)
                     package.delivery_time = truck.current_time
-                    package.status = 'DELIVERED'
                     truck.packages.remove(package_id)
                     deliveries.append(package)
-                    ## FIX ME 
-                    # print(f'Package {package_id} delivered at {package.delivery_time}')
             
         truck.current_location = closest_package.address
         if closest_package_id in truck.packages:
@@ -261,10 +290,21 @@ def main_menu():
                 # Convert the delivery time from timedelta to time
                 delivery_time_as_time = timedelta_to_time(selected_package.delivery_time)
 
+                # Convert departure time from timedelta to time
+                departure_time_as_time = timedelta_to_time(selected_package.departure)
+
                 if current_time >= delivery_time_as_time:
+                    selected_package.status = 'Delivered'
                     print(f'Package {selected_package.id} was delivered at {delivery_time_as_time}.\n')
-                else:
+                    print(f'Status: {selected_package.status}\n')
+                elif current_time <= delivery_time_as_time and current_time < departure_time_as_time:
+                    selected_package.status = 'At Hub'
                     print(f'Package {selected_package.id} has not been delivered yet. The delivery deadline is {selected_package.deadline}\n')
+                    print(f'Status: {selected_package.status}, Scheduled Departure: {selected_package.departure}\n')
+                elif current_time <= delivery_time_as_time and current_time > departure_time_as_time: 
+                    selected_package.status = 'En Route'
+                    print(f'Package {selected_package.id} has not been delivered yet. The delivery deadline is {selected_package.deadline}\n')
+                    print(f'Status: {selected_package.status}, Departed At: {selected_package.departure}\n')
             
             except:
                 print('Please enter valid time format (hh:mm:ss)')
@@ -285,10 +325,22 @@ def main_menu():
                 for package in all_deliveries:
                     # Convert the delivery time from timedelta to time
                     delivery_time_as_time = timedelta_to_time(package.delivery_time)
+
+                    # Convert the delivery time from timedelta to time
+                    departure_time_as_time = timedelta_to_time(package.departure)
+
                     if current_time >= delivery_time_as_time:
+                        package.status = 'Delivered'
                         print(f'Package {package.id} was delivered at {delivery_time_as_time}.')
-                    else:
-                        print(f'Package {package.id} has not been delivered yet.')
+                        print(f'Status: {package.status}\n')
+                    elif current_time <= delivery_time_as_time and current_time < departure_time_as_time:
+                        package.status = 'At Hub'
+                        print(f'Package {package.id} has not been delivered yet. The delivery deadline is {package.deadline}')
+                        print(f'Status: {package.status}, Scheduled Departure: {package.departure}\n')
+                    elif current_time <= delivery_time_as_time and current_time > departure_time_as_time: 
+                        package.status = 'En Route'
+                        print(f'Package {package.id} has not been delivered yet. The delivery deadline is {package.deadline}')
+                        print(f'Status: {package.status}, Departed At: {package.departure}\n')
 
             except:
                 print('Please enter valid time format (hh:mm:ss)')
@@ -303,7 +355,6 @@ def main_menu():
             print('\n')
             print(f'{user_input} is an invalid input.\n')
 
-        
 main_menu()
 
 
