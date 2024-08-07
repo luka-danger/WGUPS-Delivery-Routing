@@ -1,16 +1,18 @@
 # Attribution: WGU Webinar 1: "Let's Go Hashing"
 # Link: https://wgu.hosted.panopto.com/Panopto/Pages/Viewer.aspx?id=f08d7871-d57a-496e-a6a1-ac7601308c71
 class HashMap:
-    # Create 40 + 1 bucket hash table 
+    # Create 40 bucket hash table 
     # Could reduce size to 10 and create chaining to prevent collisions 
-    # For relevatively small amount of data, 41 buckets will suffice
-    def __init__(self, initial_size = 41):
+    # For relevatively small amount of data, 40 buckets will suffice
+    # One bucket per element allows for O(1) for methods 
+    def __init__(self, initial_size = 40):
         # Create empty buckets
         self.hashlist = []
         # Append empty buckets to a list
         for i in range(initial_size):
             self.hashlist.append([])
 
+    # Time-Complexity: O(n)
     # Allows for hash function reusability 
     def get_bucket(self, key):
         # Hash Function: Assign each item to a bucket
@@ -18,7 +20,9 @@ class HashMap:
         # Store item in list
         bucket_list = self.hashlist[bucket]
         return bucket_list
-
+    
+    # Time-Complexity: O(1)
+    # Insert key, value pair into hash map
     def insert(self, key, value):
         bucket_list = self.get_bucket(int(key))
 
@@ -32,6 +36,8 @@ class HashMap:
         bucket_list.append(key_value)
         return True
     
+    # Time-Complexity: O(1)
+    # Search for element in hashmpa by key
     def lookup(self, key):
         bucket_list = self.get_bucket(key)
 
@@ -41,6 +47,8 @@ class HashMap:
                 return key_value[1]
         return 'Package ID not found.' 
 
+    # Time-Complexity: O(1)
+    # Remove element from hashmap
     def remove(self, key):
         bucket_list = self.get_bucket(key)
 

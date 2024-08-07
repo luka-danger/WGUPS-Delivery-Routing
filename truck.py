@@ -8,7 +8,7 @@ class Truck:
         self.mileage = mileage
         self.departure = departure
 
-
+    # Attribution: https://www.digitalocean.com/community/tutorials/python-str-repr-functions
     def __str__(self):
         return f'{self.capacity}, {self.speed}, {self.current_location}, {self.packages},\
             {self.mileage}, {self.departure}'
