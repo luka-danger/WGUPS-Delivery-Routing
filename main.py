@@ -206,18 +206,21 @@ def deliver_package(truck):
             truck_location = truck.current_location 
             distance = distance_between(truck_location, package_address)
             
-            if package_id == 9: 
+            # Update Package 9 address 
+            if package_id == 9:
                 package = package_hashmap.lookup(9)
                 package.address = '410 S State St'
                 package.zip_code = '84111'
                 package.special_notes = 'Address Changed from 300 State St to 410 S State St'
 
+            # Prioritze Package 6
             if package_id == 6:
                 package = package_hashmap.lookup(6)
                 closest_package = package
                 closest_package_id = package_id
                 deliveries.append(closest_package)
 
+            # Find shortest distance 
             elif distance < min_distance:
                 min_distance = distance
                 closest_package = package
@@ -241,8 +244,10 @@ def deliver_package(truck):
                     package.delivery_time = truck.current_time
                     truck.packages.remove(package_id)
                     deliveries.append(package)
-            
+
         truck.current_location = closest_package.address
+
+        # Remove package from truck after delivery
         if closest_package_id in truck.packages:
             truck.packages.remove(closest_package_id)
         else:
@@ -269,6 +274,7 @@ def combine():
         if package not in all_deliveries:
             all_deliveries.append(package)
     
+    # Sort packages by earliest delivery time
     all_deliveries.sort(key=lambda pkg: pkg.delivery_time)
 
     return all_deliveries
@@ -409,29 +415,35 @@ def main_menu():
                 minutes, seconds = divmod(remainder, 60)
                 return datetime.time(datetime(1900, 1, 1, hours, minutes, seconds))
 
+            # Prevent program from breaking due to invalid user input
             try: 
                 input_time = input("Enter current time in hh:mm:ss format:\n")
+                # Convert user input to time object
                 current_time = datetime.strptime(input_time, "%H:%M:%S").time()
 
+                # Hashmap lookup function chooses package from user input 
                 selected_package = package_hashmap.lookup(choose_package_id)
 
-                # Convert the delivery time from timedelta to time
+                # Convert the delivery time from timedelta to time object
                 delivery_time_as_time = timedelta_to_time(selected_package.delivery_time)
 
-                # Convert departure time from timedelta to time
+                # Convert departure time from timedelta to time object
                 departure_time_as_time = timedelta_to_time(selected_package.departure)
 
+                # Set status to delivered if the current time is after the delivery time
                 if current_time >= delivery_time_as_time:
                     selected_package.status = 'Delivered'
-                    print(f'Package {selected_package.id} was delivered at {delivery_time_as_time}.\n')
+                    print(f'\nPackage {selected_package.id} was delivered at {delivery_time_as_time}.')
                     print(f'Status: {selected_package.status}\n')
+                # Set status to at hub if the package has not been delievered and the current time is before the truck departure time
                 elif current_time <= delivery_time_as_time and current_time < departure_time_as_time:
                     selected_package.status = 'At Hub'
-                    print(f'Package {selected_package.id} has not been delivered yet. The delivery deadline is {selected_package.deadline}\n')
+                    print(f'\nPackage {selected_package.id} has not been delivered yet. The delivery deadline is {selected_package.deadline}')
                     print(f'Status: {selected_package.status}, Scheduled Departure: {selected_package.departure}\n')
+                # Set status to at hub if the package has not been delievered and the current time is after the truck departure time
                 elif current_time <= delivery_time_as_time and current_time > departure_time_as_time: 
                     selected_package.status = 'En Route'
-                    print(f'Package {selected_package.id} has not been delivered yet. The delivery deadline is {selected_package.deadline}\n')
+                    print(f'\nPackage {selected_package.id} has not been delivered yet. The delivery deadline is {selected_package.deadline}')
                     print(f'Status: {selected_package.status}, Departed At: {selected_package.departure}\n')
             
             except:
@@ -440,16 +452,20 @@ def main_menu():
         elif user_input == 4:
             from datetime import datetime
 
+            # Convert timedelta to time object
             def timedelta_to_time(td):
                 total_seconds = int(td.total_seconds())
                 hours, remainder = divmod(total_seconds, 3600)
                 minutes, seconds = divmod(remainder, 60)
                 return datetime.time(datetime(1900, 1, 1, hours, minutes, seconds))
 
+            # Prevent program from breaking due to invalid user input
             try: 
                 input_time = input("Enter current time in hh:mm:ss format:\n")
+                # Convert user input to time object
                 current_time = datetime.strptime(input_time, "%H:%M:%S").time()
 
+                # Iterate through all packages in all_deliveries array (created in combine() function)
                 for package in all_deliveries:
                     # Convert the delivery time from timedelta to time
                     delivery_time_as_time = timedelta_to_time(package.delivery_time)
@@ -457,14 +473,17 @@ def main_menu():
                     # Convert the delivery time from timedelta to time
                     departure_time_as_time = timedelta_to_time(package.departure)
 
+                    # Set status to delivered if the current time is after the delivery time
                     if current_time >= delivery_time_as_time:
                         package.status = 'Delivered'
                         print(f'Package {package.id} was delivered at {delivery_time_as_time}.')
                         print(f'Status: {package.status}\n')
+                    # Set status to at hub if the package has not been delievered and the current time is before the truck departure time
                     elif current_time <= delivery_time_as_time and current_time < departure_time_as_time:
                         package.status = 'At Hub'
                         print(f'Package {package.id} has not been delivered yet. The delivery deadline is {package.deadline}')
                         print(f'Status: {package.status}, Scheduled Departure: {package.departure}\n')
+                    # Set status to at hub if the package has not been delievered and the current time is after the truck departure time
                     elif current_time <= delivery_time_as_time and current_time > departure_time_as_time: 
                         package.status = 'En Route'
                         print(f'Package {package.id} has not been delivered yet. The delivery deadline is {package.deadline}')
@@ -473,12 +492,13 @@ def main_menu():
             except:
                 print('Please enter valid time format (hh:mm:ss)')
             
-
+        # Exit while loop
         elif user_input == 5: 
             print('\n')
             print("Exiting Program\n")
             break
         
+        # Prevent code from breaking due to invalid user input
         else: 
             print('\n')
             print(f'{user_input} is an invalid input.\n')
