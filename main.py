@@ -212,7 +212,6 @@ def deliver_package(truck):
                 closest_package = package
                 closest_package_id = package_id
                 deliveries.append(closest_package)
-                
 
         truck.mileage += min_distance
 
@@ -240,6 +239,8 @@ def deliver_package(truck):
 
     return deliveries 
 
+
+# Combines all deliveries into a single array to be easily accessed by other functions
 def combine():
     all_deliveries = []
     delivery_1 = deliver_package(truck_1)
@@ -261,6 +262,8 @@ def combine():
 
     return all_deliveries
 
+
+# Calculate total mileage
 def total_mileage():
     combine()
 
@@ -268,6 +271,107 @@ def total_mileage():
     print('\n')
     print(f'All packages delivered in {total_mileage} miles.')
 
+
+'''
+Main Menu
+
+Starting: Print the WGUPS Logo and call the combine() function to run delivery algorithm.
+
+While Loop prints the menu and takes user input until '5' is selected, which exits the program.
+
+Expected Output:
+'
+=======================================================
+          
+1. View Total Mileage
+2. View Deliveries and Total Mileage
+3. View Single Package Info at a Given Time
+4. View All Package Info at a Given Time
+5. Exit Program
+
+========================================================
+
+Choose an option: 1, 2, 3, 4, or 5?: 
+'
+
+Menu Options:
+1) View Total Mileage - Calls total_mileage() to print mileage to terminal
+Expected output: 'All packages delivered in 98.4 miles.'
+
+2) View Deliveries and Total Mileage - 
+Iterate through packages in all_deliveries array (created in combine() function)
+
+Expected output: 
+'Package 14 delivered at 8:06:20 ... (display all package delivery times)
+
+All packages delivered in 98.4 miles.
+'
+
+3) View Single Package Info at a Given Time - 
+
+Function: 
+timedelta_to_time(td): converts timedelta to time object 
+
+Select package based on user input via hashmap lookup method
+
+Take user input of current time and format to hh:mm:ss
+Use try / except block to prevent code from breaking from user error
+Convert delivery time and departure time time object 
+
+Set package status based on current time and display package details.
+
+Sample Input:
+'Choose an option: 1, 2, 3, 4, or 5?: 
+3
+Enter a Package ID to lookup: 
+4
+Enter current time in hh:mm:ss format:
+10:01:02
+'
+
+Expected output: 
+'Package 4 has not been delivered yet. The delivery deadline is EOD
+
+Status: En Route, Departed At: 9:10:00
+'
+
+4) View All Package Info at a Given Time - 
+
+Function: 
+timedelta_to_time(td): converts timedelta to time object 
+
+Take user input of current time and format to hh:mm:ss
+Use try / except block to prevent code from breaking from user error
+Convert delivery time and departure time time object 
+
+Iterate through each package in all_deliveries array
+
+Set package status based on current time and display package details.
+
+Sample Input:
+'Choose an option: 1, 2, 3, 4, or 5?: 
+4
+Enter current time in hh:mm:ss format:
+10:01:02
+'
+
+Expected output: 
+'Package 4 has not been delivered yet. The delivery deadline is EOD
+
+Status: En Route, Departed At: 9:10:00 
+
+... (display info for all packages)
+'
+
+5) Breaks the while loop and terminates the program.
+Expected output: 'Exiting Program'
+
+Edge Case - Invalid selection alerts the user of the error and repeats the loop.
+
+Prevents program from breaking.
+
+Expected output: '{user_input} is an invalid input'
+'''
 def main_menu():
     print(logo)
     all_deliveries = combine()
@@ -288,6 +392,7 @@ def main_menu():
 
             choose_package_id = int(input("Enter a Package ID to lookup: \n"))
 
+            # Convert timedelta to time object
             def timedelta_to_time(td):
                 total_seconds = int(td.total_seconds())
                 hours, remainder = divmod(total_seconds, 3600)
