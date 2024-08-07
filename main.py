@@ -8,8 +8,7 @@ import csv
 import datetime
 
 
-# Read Address CSV file
-# Attribution: https://docs.python.org/3/library/csv.html
+# Read CSV Package File
 '''
 Load Package Data Function 
 
@@ -22,10 +21,9 @@ Key: Package ID (package_id)
 Value: Package Info (address, city, state, zip_code, deadline, weight, special_notes)
 
 Attribution: https://www.youtube.com/watch?v=efSjcrp87OY
+Attribution: https://docs.python.org/3/library/csv.html
 '''
 def load_package_data(csv_file, hash_map):
-    # Read CSV Package File
-    # Attribution: https://docs.python.org/3/library/csv.html
     with open(csv_file) as packageCSV:
         ReadPackage = list(csv.reader(packageCSV))
 
@@ -61,9 +59,9 @@ load_package_data("csv-files/packageCSV.csv", package_hashmap)
 # Store distance data points in empty array
 distance_data = []
 
+# Read CSV Distance File
+# Attribution: https://docs.python.org/3/library/csv.html
 def load_distance_data():
-    # Read CSV Distance File
-    # Attribution: https://docs.python.org/3/library/csv.html
     with open("csv-files/distanceCSV.csv") as distanceCSV:
         ReadDistance = list(csv.reader(distanceCSV))
 
@@ -77,9 +75,10 @@ load_distance_data()
 
 address_data = []
 
+
+# Read CSV Address file 
+# Attribution: https://docs.python.org/3/library/csv.html
 def load_address_data():
-    # Read CSV Address file 
-    # Attribution: https://docs.python.org/3/library/csv.html
     with open("csv-files/addressCSV.csv") as addressCSV:
         ReadAddress = list(csv.reader(addressCSV))
 
@@ -92,6 +91,7 @@ def load_address_data():
 # Pass Address CSV File to load_address_data function
 load_address_data()
 
+
 # Look up items from address_data array
 def lookup_address(index):
     # Ensure index is within the range of the list
@@ -100,9 +100,9 @@ def lookup_address(index):
     else:
         return 'Index out of range'
 
-'''
-Load Package Data Function 
 
+# Find distance between two addresses
+'''
 Params: 
 address1 (current address), address2 (next address)
 
@@ -141,12 +141,21 @@ truck_2 = Truck(2, 16, 18, '4001 South 700 East', [3, 4, 6, 8, 18, 22, 25, 26, 3
 truck_3 = Truck(3, 16, 18, '4001 South 700 East', [2, 5, 7, 9, 10, 23, 24, 27, 28, 32, 33, 35, 39], 0\
                 , datetime.timedelta(hours=10, minutes=25))
 
+
+# Assigns truck number and departure time for each package
+'''
+Params - truck
+
+Iterate through each package in truck, assign truck_num to package based on truck_id,
+and assign departure time to each package based on truck departure
+'''
 def assign_truck_num(truck):
     for package in truck.packages:
         package = package_hashmap.lookup(package)
         package.truck_num = truck.truck_id 
         package.departure = truck.departure 
 
+# Call function for truck 1, 2, and 3
 assign_truck_num(truck_1)
 assign_truck_num(truck_2)
 assign_truck_num(truck_3)
