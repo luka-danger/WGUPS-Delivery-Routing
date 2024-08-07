@@ -161,11 +161,23 @@ Truck (1, 2, or 3)
 Starting: Set the truck location to the hub. Instantiate an empty array for deliveries. 
 (Used for a separate function)
 
-Algorithm: Run while there are packages on truck. Iterate through each package on the truck, 
-using the hashmap lookup to find the package by ID. Use the distance between function to 
-calculate the distance from the truck current location (starting at hub) and the 
+Algorithm: Run while there are packages on truck and set the minimum distance to an infinite number.
+Iterate through each package on the truck, using the hashmap lookup to find the package by ID. Use the 
+distance between function to calculate the distance from the truck current location (starting at hub) and 
+the truck location. The first distance will become the new min_distance and the current package will be the 
+closest package. Iterate through each package until the shortest distance is found. 
 
-Try-Except Prevents code from breaking when address is not found or out of range
+Add the distance to the truck mileage and calculate the time based on distance / speed. Deliver the package, 
+set the truck's new location, remove the package from the truck, and repeat the algorithm.
+
+Edge Cases: 
+Case 1 - Package 6 arrives late and has an earlier delivery time, so it is prioritized over other packages
+on that truck. 
+
+Case 2 - Packages 13, 14, 15, 19, and 20 should be delivered together.
+
+Return - deliveres array 
+(Contains each package details that can be used in other functions)
 
 Attribution: WGU Resources (Example Nearest Neighbor Algorithm)
 '''
@@ -224,7 +236,8 @@ def deliver_package(truck):
         if closest_package_id in truck.packages:
             truck.packages.remove(closest_package_id)
         else:
-            print(f"Package ID {closest_package_id} not found in truck.packages")    
+            print(f"Package ID {closest_package_id} not found in truck.packages")   
+
     return deliveries 
 
 def combine():
