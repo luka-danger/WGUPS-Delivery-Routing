@@ -7,6 +7,11 @@ from datetime import *
 import csv 
 import datetime
 
+################################
+
+# Program Time-Complexity: O(n) + O(1) + O(n) + O(n) + O(n^2) + O(n) + O(n^2) --> O(n^2)
+
+################################
 
 # Read CSV Package File
 '''
@@ -27,6 +32,7 @@ def load_package_data(csv_file, hash_map):
     with open(csv_file) as packageCSV:
         ReadPackage = list(csv.reader(packageCSV))
 
+        # Time-Complexity: O(n)
         # Iterate through each row in Package CSV and index row
         for row in ReadPackage:
             package_id = row[0]
@@ -48,6 +54,7 @@ def load_package_data(csv_file, hash_map):
             
             # Use HashMap insert 
             # {Key: package_id, Value: Package_Data)
+            # Time-Complexity: O(1)
             hash_map.insert(package_id, package_data)
 
 # Instantiate HashMap
@@ -65,6 +72,7 @@ def load_distance_data():
     with open("csv-files/distanceCSV.csv") as distanceCSV:
         ReadDistance = list(csv.reader(distanceCSV))
 
+    # Time-Complexity: O(n)
     # Iterate through each row in Distance CSV
     for distance in ReadDistance:
         # Append to distance_data array 
@@ -82,6 +90,7 @@ def load_address_data():
     with open("csv-files/addressCSV.csv") as addressCSV:
         ReadAddress = list(csv.reader(addressCSV))
 
+    # Time-Complexity: O(n)
     # Iterate through each row of address
     for address in ReadAddress:
         # Append to address_data array
@@ -150,6 +159,7 @@ Iterate through each package in truck, assign truck_num to package based on truc
 and assign departure time to each package based on truck departure
 '''
 def assign_truck_num(truck):
+    # Time-Complexity: O(n)
     for package in truck.packages:
         package = package_hashmap.lookup(package)
         package.truck_num = truck.truck_id 
@@ -192,14 +202,17 @@ Return - deliveres array
 
 Attribution: WGU Resources (Example Nearest Neighbor Algorithm)
 '''
+# Time-Complexity: O(n) x O(n) = O(n x n) --> O(n^2)
 def deliver_package(truck):
     truck.current_time = truck.departure 
     deliveries = []
-
+    
+    # Time-Complexity: O(n)
     while len(truck.packages) > 0:
         min_distance = float('inf')
         closest_package = None 
 
+        # Time-Complexity: O(n)
         for package_id in truck.packages: 
             package = package_hashmap.lookup(package_id)
             package_address = package.address 
@@ -238,6 +251,7 @@ def deliver_package(truck):
         if closest_package.id == '14':
             ## ALSO DELIVER AND REMOVE packages 13, 15, 19, and 20 when 14 is delivered
             additional_packages = [13, 15, 19, 20]
+            # Time-Complexity: O(n)
             for package_id in additional_packages:
                 if package_id in truck.packages:
                     package = package_hashmap.lookup(package_id)
@@ -255,21 +269,24 @@ def deliver_package(truck):
 
     return deliveries 
 
-
+# Time-Complexity: O(3n) --> O(n)
 # Combines all deliveries into a single array to be easily accessed by other functions
 def combine():
     all_deliveries = []
     delivery_1 = deliver_package(truck_1)
+    # Time-Complexity: O(n)
     for package in delivery_1:
         if package not in all_deliveries:
             all_deliveries.append(package)
 
     delivery_2 = deliver_package(truck_2)
+    # Time-Complexity: O(n)
     for package in delivery_2:
         if package not in all_deliveries:
             all_deliveries.append(package)
 
     delivery_3 = deliver_package(truck_3)
+    # Time-Complexity: O(n)
     for package in delivery_3:
         if package not in all_deliveries:
             all_deliveries.append(package)
@@ -388,9 +405,12 @@ Prevents program from breaking.
 
 Expected output: '{user_input} is an invalid input'
 '''
+# Time-Complexity: O(n x n) --> O(n^2)
 def main_menu():
     print(logo)
     all_deliveries = combine()
+
+    # Time-Complexity: O(n)
     while True:
         print(menu)
         user_input = int(input("Choose an option: 1, 2, 3, 4, or 5?: \n"))
@@ -399,11 +419,13 @@ def main_menu():
             total_mileage()
 
         elif user_input == 2:
+            # Time-Complexity: O(n)
             for package in all_deliveries:
                 print(f'Package {package.id} delivered at {package.delivery_time}\n')
             total_mileage()
 
         elif user_input == 3:
+            # Time-Complexity: O(n)
             from datetime import datetime
 
             choose_package_id = int(input("Enter a Package ID to lookup: \n"))
@@ -466,6 +488,7 @@ def main_menu():
                 current_time = datetime.strptime(input_time, "%H:%M:%S").time()
 
                 # Iterate through all packages in all_deliveries array (created in combine() function)
+                # Time-Complexity: O(n)
                 for package in all_deliveries:
                     # Convert the delivery time from timedelta to time
                     delivery_time_as_time = timedelta_to_time(package.delivery_time)
