@@ -164,6 +164,8 @@ assign_truck_num(truck_3)
 '''
 Nearest Neighbor Algorithm 
 
+# 
+
 Params: 
 Truck (1, 2, or 3)
 
@@ -281,9 +283,8 @@ def total_mileage():
     print(f'All packages delivered in {total_mileage} miles.')
 
 
+# Run Main Menu Loop
 '''
-Main Menu
-
 Starting: Print the WGUPS Logo and call the combine() function to run delivery algorithm.
 
 While Loop prints the menu and takes user input until '5' is selected, which exits the program.
