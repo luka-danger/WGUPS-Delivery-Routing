@@ -1,3 +1,12 @@
+################################
+
+# WGUPS Package Delivery
+# WGU - C950: Data Structures and Algorithms 2 
+# Nate Edge
+# 011178911
+
+################################
+
 from logo import *
 from hashmap import *
 from package import *
@@ -7,11 +16,7 @@ from datetime import *
 import csv 
 import datetime
 
-################################
-
-# Program Time-Complexity: O(n) + O(1) + O(n) + O(n) + O(n^2) + O(n) + O(n^2) --> O(n^2)
-
-################################
+## Program Time-Complexity: O(n) + O(1) + O(n) + O(n) + O(n^2) + O(n) + O(n^2) --> O(n^2)
 
 # Read CSV Package File
 '''
@@ -170,11 +175,9 @@ assign_truck_num(truck_1)
 assign_truck_num(truck_2)
 assign_truck_num(truck_3)
 
-
+# Deliver Packages (Follow created routing)
 '''
-Nearest Neighbor Algorithm 
-
-# 
+Nearest Neighbor Algorithm
 
 Params: 
 Truck (1, 2, or 3)
@@ -456,17 +459,21 @@ def main_menu():
                 if current_time >= delivery_time_as_time:
                     selected_package.status = 'Delivered'
                     print(f'\nPackage {selected_package.id} was delivered at {delivery_time_as_time}.')
-                    print(f'Status: {selected_package.status}\n')
+                    print(f'Package Delivered To: {selected_package.address}, {selected_package.city}, {selected_package.zip_code} lbs')
+                    print(f'Status: {selected_package.status}, Weight: {selected_package.weight}\n')
+                    
                 # Set status to at hub if the package has not been delievered and the current time is before the truck departure time
                 elif current_time <= delivery_time_as_time and current_time < departure_time_as_time:
                     selected_package.status = 'At Hub'
                     print(f'\nPackage {selected_package.id} has not been delivered yet. The delivery deadline is {selected_package.deadline}')
-                    print(f'Status: {selected_package.status}, Scheduled Departure: {selected_package.departure}\n')
+                    print(f'Delivery Address: {selected_package.address}, {selected_package.city}, {selected_package.zip_code}')
+                    print(f'Status: {selected_package.status}, Scheduled Departure: {selected_package.departure}, Weight: {selected_package.weight} lbs\n')
                 # Set status to at hub if the package has not been delievered and the current time is after the truck departure time
                 elif current_time <= delivery_time_as_time and current_time > departure_time_as_time: 
                     selected_package.status = 'En Route'
                     print(f'\nPackage {selected_package.id} has not been delivered yet. The delivery deadline is {selected_package.deadline}')
-                    print(f'Status: {selected_package.status}, Departed At: {selected_package.departure}\n')
+                    print(f'Delivery Address: {selected_package.address}, {selected_package.city}, {selected_package.zip_code}')
+                    print(f'Status: {selected_package.status}, Departed At: {selected_package.departure}, Weight: {selected_package.weight} lbs\n')
             
             except:
                 print('Please enter valid time format (hh:mm:ss)')
@@ -500,21 +507,24 @@ def main_menu():
                     if current_time >= delivery_time_as_time:
                         package.status = 'Delivered'
                         print(f'Package {package.id} was delivered at {delivery_time_as_time}.')
-                        print(f'Status: {package.status}\n')
+                        print(f'Package Delivered To: {package.address}, {package.city}, {package.zip_code}')
+                        print(f'Status: {package.status}, Weight: {package.weight} lbs\n')
                     # Set status to at hub if the package has not been delievered and the current time is before the truck departure time
                     elif current_time <= delivery_time_as_time and current_time < departure_time_as_time:
                         package.status = 'At Hub'
                         print(f'Package {package.id} has not been delivered yet. The delivery deadline is {package.deadline}')
-                        print(f'Status: {package.status}, Scheduled Departure: {package.departure}\n')
+                        print(f'Delivery Address: {package.address}, {package.city}, {package.zip_code}')
+                        print(f'Status: {package.status}, Scheduled Departure: {package.departure}, Weight: {package.weight} lbs\n')
                     # Set status to at hub if the package has not been delievered and the current time is after the truck departure time
                     elif current_time <= delivery_time_as_time and current_time > departure_time_as_time: 
                         package.status = 'En Route'
                         print(f'Package {package.id} has not been delivered yet. The delivery deadline is {package.deadline}')
-                        print(f'Status: {package.status}, Departed At: {package.departure}\n')
+                        print(f'Delivery Address: {package.address}, {package.city}, {package.zip_code}')
+                        print(f'Status: {package.status}, Departed At: {package.departure}, Weight: {package.weight} lbs\n')
 
             except:
                 print('Please enter valid time format (hh:mm:ss)')
-            
+
         # Exit while loop
         elif user_input == 5: 
             print('\n')

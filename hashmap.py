@@ -37,7 +37,7 @@ class HashMap:
         return True
     
     # Time-Complexity: O(1)
-    # Search for element in hashmpa by key
+    # Search for element in hashmap by key
     def lookup(self, key):
         bucket_list = self.get_bucket(key)
 
