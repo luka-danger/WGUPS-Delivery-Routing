@@ -209,6 +209,7 @@ Attribution: WGU Resources (Example Nearest Neighbor Algorithm)
 def deliver_package(truck):
     truck.current_time = truck.departure 
     deliveries = []
+    starting_location = truck.current_location 
     
     # Time-Complexity: O(n)
     while len(truck.packages) > 0:
@@ -221,6 +222,10 @@ def deliver_package(truck):
             package_address = package.address 
             truck_location = truck.current_location 
             distance = distance_between(truck_location, package_address)
+
+            if len(truck.packages) == 1:
+                last_distance = distance_between(truck_location, starting_location)
+                truck.mileage += last_distance
             
             # Update Package 9 address 
             if package_id == 9:
@@ -270,7 +275,7 @@ def deliver_package(truck):
         else:
             print(f"Package ID {closest_package_id} not found in truck.packages")   
 
-    return deliveries 
+    return deliveries
 
 # Time-Complexity: O(3n) --> O(n)
 # Combines all deliveries into a single array to be easily accessed by other functions
