@@ -460,13 +460,18 @@ def main_menu():
                 # Convert departure time from timedelta to time object
                 departure_time_as_time = timedelta_to_time(selected_package.departure)
 
-                if selected_package.id == 9:
-                    if current_time < departure_time_as_time:
+                package_9_updated = '10:20:00'
+                update_9 = datetime.strptime(package_9_updated, "%H:%M:%S").time()
+
+
+                if choose_package_id == 9:
+                    if current_time < update_9:
                         selected_package = package_hashmap.lookup(9)
                         selected_package.address = '300 State St'
                         selected_package.zip_code = '84103'
                         selected_package.special_notes = 'Waiting on Updated Address'
-                    if current_time >= departure_time_as_time:
+                    elif current_time >= update_9:
+                        selected_package = package_hashmap.lookup(9)
                         selected_package.address = '410 S State St'
                         selected_package.zip_code = '84111'
                         selected_package.special_notes = 'Address Updated!'
@@ -486,7 +491,7 @@ def main_menu():
                     print(f'Status: {selected_package.status}, Scheduled Departure: {selected_package.departure}, Weight: {selected_package.weight} lbs')
                     print(f'Truck: {selected_package.truck_num}, Notes: {selected_package.special_notes}\n')
                 # Set status to at hub if the package has not been delievered and the current time is after the truck departure time
-                elif current_time <= delivery_time_as_time and current_time > departure_time_as_time: 
+                elif current_time <= delivery_time_as_time and current_time >= departure_time_as_time: 
                     selected_package.status = 'En Route'
                     print(f'\nPackage {selected_package.id} has not been delivered yet. The delivery deadline is {selected_package.deadline}')
                     print(f'Delivery Address: {selected_package.address}, {selected_package.city}, {selected_package.zip_code}')
