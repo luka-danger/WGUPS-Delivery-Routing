@@ -232,7 +232,7 @@ def deliver_package(truck):
                 package = package_hashmap.lookup(9)
                 package.address = '410 S State St'
                 package.zip_code = '84111'
-                package.special_notes = 'Address Changed from 300 State St to 410 S State St'
+                package.special_notes = 'Address Updated!'
 
             # Prioritze Package 6
             if package_id == 6:
@@ -460,25 +460,38 @@ def main_menu():
                 # Convert departure time from timedelta to time object
                 departure_time_as_time = timedelta_to_time(selected_package.departure)
 
+                if selected_package.id == 9:
+                    if current_time < departure_time_as_time:
+                        selected_package = package_hashmap.lookup(9)
+                        selected_package.address = '300 State St'
+                        selected_package.zip_code = '84103'
+                        selected_package.special_notes = 'Waiting on Updated Address'
+                    if current_time >= departure_time_as_time:
+                        selected_package.address = '410 S State St'
+                        selected_package.zip_code = '84111'
+                        selected_package.special_notes = 'Address Updated!'
+
                 # Set status to delivered if the current time is after the delivery time
                 if current_time >= delivery_time_as_time:
                     selected_package.status = 'Delivered'
                     print(f'\nPackage {selected_package.id} was delivered at {delivery_time_as_time} by truck {selected_package.truck_num}.')
                     print(f'Package Delivered To: {selected_package.address}, {selected_package.city}, {selected_package.zip_code} lbs')
-                    print(f'Status: {selected_package.status}, Weight: {selected_package.weight}\n')
+                    print(f'Status: {selected_package.status}, Weight: {selected_package.weight}, Notes: {selected_package.special_notes}\n')
                     
                 # Set status to at hub if the package has not been delievered and the current time is before the truck departure time
                 elif current_time <= delivery_time_as_time and current_time < departure_time_as_time:
                     selected_package.status = 'At Hub'
                     print(f'\nPackage {selected_package.id} has not been delivered yet. The delivery deadline is {selected_package.deadline}')
                     print(f'Delivery Address: {selected_package.address}, {selected_package.city}, {selected_package.zip_code}')
-                    print(f'Status: {selected_package.status}, Scheduled Departure: {selected_package.departure}, Weight: {selected_package.weight} lbs, Truck: {selected_package.truck_num}\n')
+                    print(f'Status: {selected_package.status}, Scheduled Departure: {selected_package.departure}, Weight: {selected_package.weight} lbs')
+                    print(f'Truck: {selected_package.truck_num}, Notes: {selected_package.special_notes}\n')
                 # Set status to at hub if the package has not been delievered and the current time is after the truck departure time
                 elif current_time <= delivery_time_as_time and current_time > departure_time_as_time: 
                     selected_package.status = 'En Route'
                     print(f'\nPackage {selected_package.id} has not been delivered yet. The delivery deadline is {selected_package.deadline}')
                     print(f'Delivery Address: {selected_package.address}, {selected_package.city}, {selected_package.zip_code}')
-                    print(f'Status: {selected_package.status}, Departed At: {selected_package.departure}, Weight: {selected_package.weight} lbs, Truck: {selected_package.truck_num}\n')
+                    print(f'Status: {selected_package.status}, Departed At: {selected_package.departure}, Weight: {selected_package.weight} lbs')
+                    print(f'Truck: {selected_package.truck_num}, Notes: {selected_package.special_notes}\n')
             
             except:
                 print('Please enter valid time format (hh:mm:ss)')
@@ -513,19 +526,21 @@ def main_menu():
                         package.status = 'Delivered'
                         print(f'Package {package.id} was delivered at {delivery_time_as_time} by truck {package.truck_num}.')
                         print(f'Package Delivered To: {package.address}, {package.city}, {package.zip_code}')
-                        print(f'Status: {package.status}, Weight: {package.weight} lbs\n')
+                        print(f'Status: {package.status}, Weight: {package.weight} lbs, Notes: {package.special_notes}\n')
                     # Set status to at hub if the package has not been delievered and the current time is before the truck departure time
                     elif current_time <= delivery_time_as_time and current_time < departure_time_as_time:
                         package.status = 'At Hub'
                         print(f'Package {package.id} has not been delivered yet. The delivery deadline is {package.deadline}')
                         print(f'Delivery Address: {package.address}, {package.city}, {package.zip_code}')
-                        print(f'Status: {package.status}, Scheduled Departure: {package.departure}, Weight: {package.weight} lbs, Truck: {package.truck_num}\n')
+                        print(f'Status: {package.status}, Scheduled Departure: {package.departure}, Weight: {package.weight} lbs')
+                        print(f'Truck: {package.truck_num}, Notes: {package.special_notes}\n')
                     # Set status to at hub if the package has not been delievered and the current time is after the truck departure time
                     elif current_time <= delivery_time_as_time and current_time > departure_time_as_time: 
                         package.status = 'En Route'
                         print(f'Package {package.id} has not been delivered yet. The delivery deadline is {package.deadline}')
                         print(f'Delivery Address: {package.address}, {package.city}, {package.zip_code}')
-                        print(f'Status: {package.status}, Departed At: {package.departure}, Weight: {package.weight} lbs, Truck: {package.truck_num}\n')
+                        print(f'Status: {package.status}, Departed At: {package.departure}, Weight: {package.weight} lbs')
+                        print(f'Truck: {package.truck_num}, Notes: {package.special_notes}\n')
 
             except:
                 print('Please enter valid time format (hh:mm:ss)')
