@@ -460,10 +460,12 @@ def main_menu():
                 # Convert departure time from timedelta to time object
                 departure_time_as_time = timedelta_to_time(selected_package.departure)
 
+                # Set Package 9 address update at 10:20:00am 
                 package_9_updated = '10:20:00'
+                # Convert to time object
                 update_9 = datetime.strptime(package_9_updated, "%H:%M:%S").time()
 
-
+                # Update address for package 9
                 if choose_package_id == 9:
                     if current_time < update_9:
                         selected_package = package_hashmap.lookup(9)
@@ -526,6 +528,22 @@ def main_menu():
                     # Convert the delivery time from timedelta to time
                     departure_time_as_time = timedelta_to_time(package.departure)
 
+                    # Set Package 9 address update at 10:20:00am 
+                    package_9_updated = '10:20:00'
+                    # Convert to time object
+                    update_9 = datetime.strptime(package_9_updated, "%H:%M:%S").time()
+
+                    # Update address for package 9
+                    if package.id == '9':
+                        if current_time < update_9:
+                            package.address = '300 State St'
+                            package.zip_code = '84103'
+                            package.special_notes = 'Waiting on Updated Address'
+                        elif current_time >= update_9:
+                            package.address = '410 S State St'
+                            package.zip_code = '84111'
+                            package.special_notes = 'Address Updated!'
+                            
                     # Set status to delivered if the current time is after the delivery time
                     if current_time >= delivery_time_as_time:
                         package.status = 'Delivered'
@@ -540,7 +558,7 @@ def main_menu():
                         print(f'Status: {package.status}, Scheduled Departure: {package.departure}, Weight: {package.weight} lbs')
                         print(f'Truck: {package.truck_num}, Notes: {package.special_notes}\n')
                     # Set status to at hub if the package has not been delievered and the current time is after the truck departure time
-                    elif current_time <= delivery_time_as_time and current_time > departure_time_as_time: 
+                    elif current_time <= delivery_time_as_time and current_time >= departure_time_as_time: 
                         package.status = 'En Route'
                         print(f'Package {package.id} has not been delivered yet. The delivery deadline is {package.deadline}')
                         print(f'Delivery Address: {package.address}, {package.city}, {package.zip_code}')
